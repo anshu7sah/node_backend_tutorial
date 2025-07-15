@@ -6,38 +6,29 @@ import { mongoConnection } from "./util/database.js";
 import authRouter from "./router/auth.js";
 import cookieSession from "cookie-session";
 import categoryRouter from "./router/category.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const PORT = process.env.PORT || 4000;
 
 const app = express();
-
-app.use(express.json());
 app.use(
-  cookieSession({
-    name: "session",
-    keys: ["skjvbkjdsvkjsdkvj"],
-
-    // Cookie Options
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+  cors({
+    origin: "http://localhost:3000", // your frontend origin
+    credentials: true,
   })
 );
-
-// const allowed = [
-//   "https://meet.google.com",
-//   "google.com",
-//   "https://monkeytype.com",
-// ];
-
+app.use(express.json());
+app.use(cookieParser("good"));
 // app.use(
-//   cors({
-//     origin: function (origin, callback) {
-//       if (allowed.includes(origin)) {
-//         callback(null, true);
-//       } else {
-//         callback(new ApiError("Not allowed by CORS", 400));
-//       }
-//     },
+//   cookieSession({
+//     name: "token",
+//     path: "/",
+//     keys: ["dsvknkvnlk"],
+//     httpOnly: true,
+//     secure: true,
+//     sameSite: "none",
+//     maxAge: 60 * 60 * 24 * 30,
 //   })
 // );
 
@@ -61,5 +52,6 @@ async function startServer() {
 startServer();
 
 app.use((err, req, res, next) => {
+  console.log(err.message);
   return res.status(err.statusCode).json({ message: err.message });
 });

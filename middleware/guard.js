@@ -3,8 +3,9 @@ import jwt from "jsonwebtoken";
 import { User } from "../model/user.js";
 
 export const authGuard = async (req, res, next) => {
-  const { token } = req.session;
+  const { token } = req.cookies;
   if (!token) {
+    console.log("token not available");
     throw new ApiError("not authorize", 403);
   }
   const verify = jwt.verify(token, process.env.JWT_SECRET);

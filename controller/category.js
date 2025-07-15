@@ -13,6 +13,11 @@ export const createCategory = async (req, res) => {
 };
 
 export const getAllCategory = async (req, res) => {
-  const allCategory = await Category.find({});
+  const query = req.query;
+
+  const allCategory = await Category.find({})
+    .skip((query.page - 1) * query.limit)
+    .limit(query.limit);
+
   return res.status(200).json({ data: allCategory });
 };
