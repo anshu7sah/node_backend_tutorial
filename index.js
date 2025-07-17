@@ -6,7 +6,7 @@ import { mongoConnection } from "./util/database.js";
 import authRouter from "./router/auth.js";
 import cookieSession from "cookie-session";
 import categoryRouter from "./router/category.js";
-import cookieParser from "cookie-parser";
+import uploadRouter from "./router/upload.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 4000;
@@ -19,18 +19,13 @@ app.use(
   })
 );
 app.use(express.json());
-app.use(cookieParser("good"));
-// app.use(
-//   cookieSession({
-//     name: "token",
-//     path: "/",
-//     keys: ["dsvknkvnlk"],
-//     httpOnly: true,
-//     secure: true,
-//     sameSite: "none",
-//     maxAge: 60 * 60 * 24 * 30,
-//   })
-// );
+// app.use(cookieParser("good"));
+app.use(
+  cookieSession({
+    signed: false,
+    secure: false,
+  })
+);
 
 // model...schema of database
 // view ...to serve the html from the Server
@@ -38,6 +33,7 @@ app.use(cookieParser("good"));
 
 app.use("/api", authRouter);
 app.use("/api", categoryRouter);
+app.use("/api", uploadRouter);
 
 async function startServer() {
   mongoConnection()
