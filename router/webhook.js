@@ -1,7 +1,6 @@
 import express from "express";
 const router = express.Router();
-
-import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils";
+import crypto from "crypto";
 
 router.post("/webhook", (req, res) => {
   const webhookBody = req.body;
@@ -12,16 +11,28 @@ router.post("/webhook", (req, res) => {
 
   //   order_id, payment_id,webhookeventId
 
-  if (
-    !validateWebhookSignature(
-      JSON.stringify(webhookBody),
-      webhookSignature,
-      webhookSecret
-    )
-  ) {
-    console.error("signature do not matched");
-    return res.status(400);
+  //   if (
+  //     !validateWebhookSignature(
+  //       JSON.stringify(webhookBody),
+  //       webhookSignature,
+  //       webhookSecret
+  //     )
+  //   ) {
+  //     console.error("signature do not matched");
+  //     return res.status(400);
+  //   }
+  const expectedSignature = crypto
+    .createHmac("sha256", webhookSecret)
+    .update(body)
+    .digest("hex");
+
+  if (expectedSignature !== webhookSignature) {
+    console.error("Signature mismatch");
+    return res.status(400).send("Invalid signature");
   }
+
+  console.log("Webhook verified and received");
+  console.log("Webhook body:", webhookBody);
 
   console.log("webhook body", webhookBody);
   const event = webhookBody.event;
@@ -46,3 +57,5 @@ router.post("/webhook", (req, res) => {
   //     receipt
   //   })
 });
+
+export default router;
