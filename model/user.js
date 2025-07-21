@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema(
     age: Number,
     isActive: { type: Boolean, default: true },
     password: { type: String, required: true },
+    role: { type: String, default: "user" },
   },
   {
     timestamps: true,

@@ -7,6 +7,7 @@ import authRouter from "./router/auth.js";
 import cookieSession from "cookie-session";
 import categoryRouter from "./router/category.js";
 import uploadRouter from "./router/upload.js";
+import orderRouter from "./router/order.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 4000;
@@ -34,6 +35,8 @@ app.use(
 app.use("/api", authRouter);
 app.use("/api", categoryRouter);
 app.use("/api", uploadRouter);
+app.use("/api", orderRouter);
+app.use("/api", webhook);
 
 async function startServer() {
   mongoConnection()

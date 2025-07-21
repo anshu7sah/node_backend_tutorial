@@ -20,6 +20,7 @@ export const registerController = async (req, res) => {
     email,
     password: hashpassword,
     age,
+    role: process.env.ADMIN_EMAIL === email ? "admin" : "user",
   });
 
   return res.status(201).json({ message: "User registered successfully" });
@@ -38,7 +39,7 @@ export const loginController = async (req, res) => {
   }
 
   const token = jwt.sign(
-    { _id: user._id, email: user.email },
+    { _id: user._id, email: user.email, role: user.role },
     process.env.JWT_SECRET,
     {
       expiresIn: "7d",
