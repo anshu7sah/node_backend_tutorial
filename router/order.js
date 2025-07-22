@@ -13,6 +13,7 @@ router.post("/create-order", async (req, res) => {
       amount: 100,
       currency: "INR",
       receipt,
+      // payment_capture: 1,
     });
 
     return res.status(201).json(data);
